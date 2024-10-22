@@ -15,6 +15,19 @@ db.ORM = Sequelize;
 db.connection = sequelize;
 
 // Importar modelos
-db.Pet = require('./')(sequelize, Sequelize);
+// db.Pet = require('./')(sequelize, Sequelize);
+
+db.User = require('./user')(sequelize, Sequelize);
+db.Card = require('./card')(sequelize, Sequelize);
+db.Nft = require('./nft')(sequelize, Sequelize);
+db.Document = require('./document')(sequelize, Sequelize);
+db.Category_Document = require('./Category_Document')(sequelize, Sequelize);
+
+
+Object.keys(db).forEach(modelName => {
+  if (db[modelName].associate) {
+    db[modelName].associate(db);
+  }
+});
 
 module.exports = db;

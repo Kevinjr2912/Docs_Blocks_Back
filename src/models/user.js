@@ -23,5 +23,19 @@ module.exports = (sequelize, Datatypes) => {
         }
     },{ timestamps: false });
 
+    User.associate = (models) => {
+        User.hasMany(models.Card, {
+            foreignKey: 'id_user'
+        });
+
+        User.hasMany(models.Document, {
+            foreignKey: 'id_user'
+        });
+
+        User.hasMany(models.Nft, {
+            foreignKey: 'id_user'
+        });
+    }
+
     return User;
 }
