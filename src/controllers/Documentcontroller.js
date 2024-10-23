@@ -8,6 +8,8 @@ const { error } = require('console');
 const createDocument = async (req, res) => {
     try {
         const file = req.file;
+        
+        
         const { id_category_Document } = req.body; // Extrae el id_category_document del cuerpo de la solicitud
 
         console.log('id_category_document:', id_category_Document);
