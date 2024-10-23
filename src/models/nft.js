@@ -13,12 +13,12 @@ module.exports = (sequelize, DataTypes) => {
                 key: 'id_user'
             }
         },
-        id_Document: {
+        id_document: {
             type: DataTypes.INTEGER,
             allowNull: false,
             references: {
                 model: 'Documents',
-                key: 'id_Document'
+                key: 'id_document'
             }
         },
         id_token: {
@@ -49,7 +49,7 @@ module.exports = (sequelize, DataTypes) => {
         });
 
         Nft.belongsTo(models.Document, {
-            foreignKey: 'id_Document'
+            foreignKey: 'id_document'
         });
     }
 

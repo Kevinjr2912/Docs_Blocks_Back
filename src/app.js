@@ -13,8 +13,8 @@ app.use(cors({
 app.use(bodyParser.json())
 
 //Cargar rutas
-app.use('/document', DocumentRouter);
-app.use('/user',UserRouter)
-app.use('/category',categoryRoutes)
+app.use('/documents', DocumentRouter);
+app.use('/users',UserRouter)
+app.use('/categories',categoryRoutes)
 module.exports=app;
 console.log("hola");

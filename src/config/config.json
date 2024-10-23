@@ -1,8 +1,8 @@
 {
     "development": {
         "username": "root",
-        "password": "l0p3z2005",
-        "database": "docs_blogs",
+        "password": "117092",
+        "database": "docsblocks",
         "host": "127.0.0.1",
         "dialect": "mysql"
     }

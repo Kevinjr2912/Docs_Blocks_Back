@@ -16,10 +16,10 @@ db.connection = sequelize;
 
 // Importar modelos
 db.User = require('./user')(sequelize, Sequelize);
-db.Card = require('./card')(sequelize, Sequelize);
+db.BankCard = require('./bankCard')(sequelize, Sequelize);
 db.Nft = require('./nft')(sequelize, Sequelize);
 db.Document = require('./document')(sequelize, Sequelize);
-db.Category_Document = require('./Category_Document')(sequelize, Sequelize);
+db.CategoryDocument = require('./categoryDocument')(sequelize, Sequelize);
 
 Object.keys(db).forEach(modelName => {
   if (db[modelName].associate) {
