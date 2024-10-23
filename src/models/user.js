@@ -1,27 +1,30 @@
-module.exports = (sequelize, Datatypes) => {
+module.exports = (sequelize, DataTypes) => {
     const User = sequelize.define('User', {
-        id_user: {
-            type: Datatypes.INTEGER,
+        id: {
+            type: DataTypes.INTEGER,
             primaryKey: true,
             autoIncrement: true
         },
         name_user: {
-            type: Datatypes.STRING,
+            type: DataTypes.STRING,
             allowNull: false
         },
         last_name_user: {
-            type: Datatypes.STRING,
+            type: DataTypes.STRING,
             allowNull: false
         },
         email_user: {
-            type: Datatypes.STRING,
-            allowNull: false
+            type: DataTypes.STRING,
+            allowNull: false,
+            unique: true
         },
         password: {
-            type:Datatypes.STRING,
+            type: DataTypes.STRING,
             allowNull: false
-        }
-    },{ timestamps: false });
+        },
+    }, {
+        timestamps: false
+    });
 
     User.associate = (models) => {
         User.hasMany(models.Card, {
@@ -38,4 +41,4 @@ module.exports = (sequelize, Datatypes) => {
     }
 
     return User;
-}
+};

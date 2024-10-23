@@ -1,45 +1,36 @@
-
-module.exports=(sequielize,DataTypes)=>{
-    const Document=sequielize.define('Document',{
-
-        id_Document:{
-            type:DataTypes.INTEGER,
-            allowNull:false,
-            primaryKey:true,
-            autoIncrement:true
+module.exports = (sequelize, DataTypes) => {
+    const Document = sequelize.define('Document', {
+        id_Document: {
+            type: DataTypes.INTEGER,
+            primaryKey: true,
+            autoIncrement: true,
         },
-
-        creation_date:{
-            type:DataTypes.DATE,
-            allowNull:false
+        route: {
+            type: DataTypes.STRING,
+            allowNull: false,
         },
-
-        ruta:{
-            type:DataTypes.STRING,
-            allowNull:false
+        original_filename: {
+            type: DataTypes.STRING,
+            allowNull: false,
         },
-
-        id_category_document:{
-            type:DataTypes.INTEGER,
-            allowNull:false,
-                references:{
-                    model:"Category_Document",
-                    key:"id_category_document"
-                }
+        creation_date: {
+            type: DataTypes.DATE,
+            allowNull: false,
+        },
+        id_category_Document: {
+            type: DataTypes.INTEGER,
+            allowNull: false,
+            references: {
+                model: 'Category_Documents', // Nombre de la tabla
+                key: 'id_category_Document' // Clave foránea
+            }
         }
+        
+    }, { timestamps: false });
 
+    Document.associate = (models) => {
+        Document.belongsTo(models.Category_Document, { foreignKey: 'id_category_Document' });
+    };
 
-    },{timeStamps:false})
-
-    Document.associate=(models)=>{
-        Document.belongsTo(models.CategoryDocument,{
-            foreignKey:'id_category_document'
-        }),
-        Document.belongsTo(models.User),{
-            foreignKey:'id_user'
-        }
-    }
-
-
-    return Document
-}
+    return Document;
+};
