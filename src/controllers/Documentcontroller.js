@@ -1,15 +1,25 @@
 const fs = require('fs');
 const path = require('path');
 const crypto = require('crypto');
-const { Document } = require('../models'); // Asegúrate de importar el modelo Document
+const { Document, Category_Document } = require('../models'); // Asegúrate de importar el modelo Document y Category_Document
+const { error } = require('console');
 
 // Método para crear un documento
 const createDocument = async (req, res) => {
     try {
         const file = req.file;
+        const { id_category_Document } = req.body; // Extrae el id_category_document del cuerpo de la solicitud
+
+        console.log('id_category_document:', id_category_Document);
 
         if (!file) {
             return res.status(400).json({ error: 'No se ha proporcionado ningún archivo' });
+        }
+
+        if (!id_category_Document) {
+            return res.status(400).json({ error: 'El id_category_document es requerido' });
+            
+            
         }
 
         const uploadPath = path.join(__dirname, 'uploads', 'documents');
@@ -29,14 +39,16 @@ const createDocument = async (req, res) => {
             route: hashedRoute,
             original_filename: file.originalname,
             creation_date: new Date(),
-            id_category_document: req.body.id_category_document,
+            id_category_Document:id_category_Document
         });
 
         res.status(201).json(document);
     } catch (error) {
         res.status(500).json({ error: error.message });
+        console.log(error);
     }
 };
+
 
 // Método para obtener todos los documentos
 const getAllDocuments = async (req, res) => {

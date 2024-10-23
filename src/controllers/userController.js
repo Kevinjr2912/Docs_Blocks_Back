@@ -1,4 +1,4 @@
-const User = require("../models/user.js");
+const { User } = require('../models'); // Esto es correcto
 
 const createUser = async (req, res) => {
   try {
@@ -8,7 +8,6 @@ const createUser = async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 };
-
 
 const getAllUsers = async (req, res) => {
   try {

@@ -16,9 +16,13 @@ db.connection = sequelize;
 
 // Importar modelos
 db.Document = require('./Document')(sequelize, Sequelize.DataTypes);
+db.User = require('./user')(sequelize, Sequelize.DataTypes); // Esta línea debe estar correcta
+db.Category_Document=require('./Category_Document')(sequelize,Sequelize.DataTypes)
 
-module.exports = {
-  ...db,
-  sequelize,
-  Sequelize,
-};
+Object.keys(db).forEach(modelName => {
+  if (db[modelName].associate) {
+    db[modelName].associate(db);
+  }
+});
+
+module.exports = db;
