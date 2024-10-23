@@ -10,15 +10,15 @@ const createDocument = async (req, res) => {
         const file = req.file;
         
         
-        const { id_category_Document } = req.body; // Extrae el id_category_document del cuerpo de la solicitud
+        const { id_category_document, id_user } = req.body; // Extrae el id_category_document del cuerpo de la solicitud
 
-        console.log('id_category_document:', id_category_Document);
+        console.log('id_category_document:', id_category_document);
 
         if (!file) {
             return res.status(400).json({ error: 'No se ha proporcionado ningún archivo' });
         }
 
-        if (!id_category_Document) {
+        if (!id_category_document) {
             return res.status(400).json({ error: 'El id_category_document es requerido' });
             
             
@@ -41,7 +41,8 @@ const createDocument = async (req, res) => {
             route: hashedRoute,
             original_filename: file.originalname,
             creation_date: new Date(),
-            id_category_Document:id_category_Document
+            id_category_document: id_category_document,
+            id_user: id_user
         });
 
         res.status(201).json(document);
@@ -53,9 +54,10 @@ const createDocument = async (req, res) => {
 
 
 // Método para obtener todos los documentos
-const getAllDocuments = async (req, res) => {
+const getDocuments = async (req, res) => {
     try {
-        const documents = await Document.findAll(); // Obtener todos los documentos
+        const id_user = req.params.id_user;
+        const documents = await Document.findAll({where: {id_user: id_user}}); // Obtener todos los documentos
 
         // Respuesta exitosa
         res.status(200).json(documents);
@@ -66,5 +68,5 @@ const getAllDocuments = async (req, res) => {
 
 module.exports = {
     createDocument,
-    getAllDocuments // Exportar el nuevo método
+    getDocuments // Exportar el nuevo método
 };

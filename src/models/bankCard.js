@@ -1,5 +1,5 @@
 module.exports = (sequelize, Datatypes) => {
-    const Card = sequelize.define('Card', {
+    const BankCard = sequelize.define('BankCard', {
         card_number: {
             type: Datatypes.INTEGER,
             primaryKey: true,
@@ -27,11 +27,11 @@ module.exports = (sequelize, Datatypes) => {
     },{ timeStamps: false });
 
 
-    Card.associate = (models) => {
-        Card.belongsTo(models.User, {
+    BankCard.associate = (models) => {
+        BankCard.belongsTo(models.User, {
             foreingKey: 'id_user',
         });
     }
 
-    return Card;
+    return BankCard;
 }

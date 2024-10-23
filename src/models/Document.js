@@ -1,36 +1,52 @@
 module.exports = (sequelize, DataTypes) => {
-    const Document = sequelize.define('Document', {
-        id_Document: {
-            type: DataTypes.INTEGER,
-            primaryKey: true,
-            autoIncrement: true,
+  const Document = sequelize.define(
+    "Document",
+    {
+      id_document: {
+        type: DataTypes.INTEGER,
+        primaryKey: true,
+        allowNull: false,
+        autoIncrement: true,
+      },
+      route: {
+        type: DataTypes.STRING,
+        allowNull: false,
+      },
+      original_filename: {
+        type: DataTypes.STRING,
+        allowNull: false,
+      },
+      creation_date: {
+        type: DataTypes.DATE,
+        allowNull: false,
+      },
+      id_category_document: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        references: {
+          model: "CategoryDocuments", // Nombre de la tabla
+          key: "id_category_document", // Clave foránea
         },
-        route: {
-            type: DataTypes.STRING,
-            allowNull: false,
+      },
+      id_user: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        references: {
+          model: "Users",
+          key: "id_user",
         },
-        original_filename: {
-            type: DataTypes.STRING,
-            allowNull: false,
-        },
-        creation_date: {
-            type: DataTypes.DATE,
-            allowNull: false,
-        },
-        id_category_Document: {
-            type: DataTypes.INTEGER,
-            allowNull: false,
-            references: {
-                model: 'Category_Documents', // Nombre de la tabla
-                key: 'id_category_Document' // Clave foránea
-            }
-        }
-        
-    }, { timestamps: false });
+      },
+    },
+    { timestamps: false }
+  );
 
-    Document.associate = (models) => {
-        Document.belongsTo(models.Category_Document, { foreignKey: 'id_category_Document' });
-    };
+  Document.associate = (models) => {
+    Document.belongsTo(models.CategoryDocument, {
+      foreignKey: "id_category_document",
+    });
+    
+    Document.belongsTo(models.User, { foreignKey: "id_user" });
+  };
 
-    return Document;
+  return Document;
 };

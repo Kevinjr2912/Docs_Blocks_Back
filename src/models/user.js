@@ -1,6 +1,6 @@
 module.exports = (sequelize, DataTypes) => {
     const User = sequelize.define('User', {
-        id: {
+        id_user: {
             type: DataTypes.INTEGER,
             primaryKey: true,
             autoIncrement: true
@@ -19,7 +19,7 @@ module.exports = (sequelize, DataTypes) => {
             unique: true
         },
         password: {
-            type: DataTypes.STRING,
+            type: DataTypes.STRING(200),
             allowNull: false
         },
     }, {
@@ -27,7 +27,7 @@ module.exports = (sequelize, DataTypes) => {
     });
 
     User.associate = (models) => {
-        User.hasMany(models.Card, {
+        User.hasMany(models.BankCard, {
             foreignKey: 'id_user'
         });
 
