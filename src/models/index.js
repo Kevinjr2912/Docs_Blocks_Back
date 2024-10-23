@@ -15,6 +15,10 @@ db.ORM = Sequelize;
 db.connection = sequelize;
 
 // Importar modelos
-db.Pet = require('./')(sequelize, Sequelize);
+db.Document = require('./Document')(sequelize, Sequelize.DataTypes);
 
-module.exports = db;
+module.exports = {
+  ...db,
+  sequelize,
+  Sequelize,
+};
