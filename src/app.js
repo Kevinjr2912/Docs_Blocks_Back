@@ -17,3 +17,4 @@ app.use('/document', DocumentRouter);
 app.use('/user',UserRouter)
 app.use('/category',categoryRoutes)
 module.exports=app;
+console.log("hola");
