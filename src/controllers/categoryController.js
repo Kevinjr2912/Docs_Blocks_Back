@@ -6,7 +6,7 @@ const createCategoryDocument = async (req, res) => {
         const { name_category } = req.body;
 
         if (!name_category) {
-            return res.status(400).json({ error: 'El nombre de la categoría es obligatorio' });
+            return res.status(400).json({ error: 'The name of category is necesary' });
         }
 
         // Crear la nueva categoría en la base de datos
