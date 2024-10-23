@@ -1,52 +1,76 @@
-const { ApiPromise, WsProvider, Keyring } = require('@polkadot/api');
-const connection = require("./connection")
+const { ApiPromise, WsProvider, Keyring } = require("@polkadot/api");
+const { cryptoWaitReady } = require("@polkadot/util-crypto");
 
-// Configura un firmante para la transacción
-const keyring = new Keyring({ type: 'sr25519' });
-const signer = keyring.addFromUri('0x74523cc683fb86041c84107e653631b6076eb025475df39acad7573395075a70');
+async function connectToVara() {
+  const wsProvider = new WsProvider('wss://testnet.vara.network'); // URL de nodo RPC de la red de Vara
+  const api = await ApiPromise.create({ provider: wsProvider });
+  
+  console.log('Conectado a la red de Vara');
 
-// Función para mintear un NFT
-async function mintNFT(api) {
-    const contractAddress = '0xd1d2613353d7205d801e1d2d52a0aa53a986fbad5a425e874e9d0a129955a2a2'; // Dirección del contrato desplegado
-    const gasLimit = 1000000000000n; // Configura un límite de gas adecuado (en formato BigInt)
-    const value = 0; // Valor en tokens transferidos, si aplica
+  // Verificar si el módulo de contratos está disponible
+  if (!api.tx.contracts) {
+      throw new Error('El módulo de contratos no está disponible en la red.');
+  }
 
-    // Verifica que el módulo de contratos esté disponible en la API
-    if (!api.tx.contracts) {
-        throw new Error('El módulo de contratos no está disponible en la red');
-    }
+  return api;
+}
 
-    // Datos del NFT que quieres mintear (ejemplo genérico)
-    const tokenMetadata = {
-        name: 'NFT Name',
-        description: 'NFT Description',
-        media: 'media_url',
-        reference: 'optional_reference'
-    };
+// Configuración de la clave privada del firmante
+async function setupSigner() {
+  await cryptoWaitReady();
+  const keyring = new Keyring({ type: "sr25519" });
+  const signer = keyring.addFromUri("0x74523cc683fb86041c84107e653631b6076eb025475df39acad7573395075a70");
+  return signer;
+}
 
-    // Transacción para llamar a la función 'mint' del contrato
+async function mintNFT(api, signer) {
+  const contractAddress = "0xd1d2613353d7205d801e1d2d52a0aa53a986fbad5a425e874e9d0a129955a2a2"; // Dirección del contrato NFT desplegado
+  const gasLimit = 1000000000000n; // Establece el límite de gas adecuado (BigInt)
+  const value = 0; // Valor en tokens transferidos (0 si no es necesario)
+
+  // Datos de los metadatos del NFT
+  const tokenMetadata = {
+    name: "Nombre del NFT",
+    description: "Descripción del NFT",
+    media: "url_o_datos_media",
+    reference: "Referencia opcional",
+  };
+
+  try {
+    // Crear la transacción para la función 'Mint'
     const tx = api.tx.contracts.call(
-        contractAddress,
-        value, // Valor
-        gasLimit, // Límite de gas
-        api.createType('Bytes', tokenMetadata) // Parámetros de la función
+      contractAddress, // Dirección del contrato
+      value, // Valor en tokens (si es necesario)
+      gasLimit, // Límite de gas
+      api.createType("Bytes", tokenMetadata) // Los datos del NFT convertidos a Bytes
     );
 
-    // Aquí debes firmar y enviar la transacción
-    console.log('Minteando el NFT...');
+    // Firmar y enviar la transacción
+    const result = await tx.signAndSend(signer, ({ status }) => {
+      if (status.isInBlock) {
+        console.log(`Minting en bloque: ${status.asInBlock}`);
+      } else if (status.isFinalized) {
+        console.log(`Transacción finalizada: ${status.asFinalized}`);
+      }
+    });
 
-    // Enviar la transacción (aquí necesitarías una cuenta firmante)
-    const signer = 'TUS_DATOS_DE_FIRMA'; // Aquí debes configurar un firmante válido
-    const result = await tx.signAndSend(signer);
-
-    console.log('Transacción completada:', result);
+    console.log("Resultado de la transacción:", result);
+  } catch (error) {
+    console.error("Error durante la creación del NFT:", error);
+  }
 }
 
 (async () => {
-    try {
-        const api = await connection(); // Conectarse a la red de Vara
-        await mintNFT(api); // Mintear un NFT
-    } catch (error) {
-        console.error('Error al mintear el NFT:', error);
-    }
+  try {
+    // Conexión a la red de Vara
+    const api = await connectToVara();
+
+    // Configurar el firmante (cuenta que firmará las transacciones)
+    const signer = await setupSigner();
+
+    // Mintear el NFT
+    await mintNFT(api, signer);
+  } catch (error) {
+    console.error("Error general:", error);
+  }
 })();
